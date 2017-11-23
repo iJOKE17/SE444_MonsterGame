@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html ng-app="AdventureGame">
+<head>
+<script type="text/javascript"
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+<script type="text/javascript" src="./static/js/app.js"></script>
+<script type="text/javascript" src="./static/js/character_service.js"></script>
+<script type="text/javascript" src="./static/js/character_controller.js"></script>
+<link 	rel="stylesheet" type="text/css" href="./static/css/app.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+	integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+	crossorigin="anonymous">
+
+</head>
+<body ng-controller="CharacterController as ctrl">
+	<div class="container">
+		<div class="jumbotron">
+			<h1 class="display-3  text-center">Monster Vs Heroes</h1>
+			<br />
+			<div class="text-center">
+				<div class="btn-group" role="group">
+					<button class="btn btn-outline-primary"
+						ng-click="ctrl.showPlayer()">Your character</button>
+					<button class="btn btn-outline-primary"
+						ng-click="ctrl.showBattle()">Battle</button>
+					<button class="btn btn-outline-primary"
+						ng-click="ctrl.showMonster()">Monster</button>
+					<button class="btn btn-outline-primary"
+						ng-click="ctrl.showCreate()">Create Monster</button>
+				</div>
+			</div>
+			<br />
+
+			<!--  Player Section -->
+			<div class="wrapper" ng-show="ctrl.myPlayer">
+				<div class="text-center">
+					<h2>Your Hero</h2>
+					<img src="https://orig00.deviantart.net/1fb1/f/2014/094/5/f/rock_monster_animation_by_rienquish-d7ckm3i.png" alt="Smiley face" height="250" width="250">
+					
+				</div>
+				<table class="table table-hover table-bordered">
+					<thead>
+						<tr>
+							
+							<th>Name</th>
+							<th>Level</th>
+							<th>Experience</th>
+							<th>Health</th>
+							<th>Agility</th>
+							<th>Armor</th>
+							<th>Damage</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="c in ctrl.player">
+							
+							<td><span ng-bind="c.name"></span></td>
+							<td><span ng-bind="c.level"></span></td>
+							<td><span ng-bind="c.experience"></span></td>
+							<td><span ng-bind="c.health"></span></td>
+							<td><span ng-bind="c.agility"></span></td>
+							<td><span ng-bind="c.armor"></span></td>
+							<td><span ng-bind="c.damage"></span></td>
+							<td><span><button ng-click="ctrl.showEditPlayer()"
+										class="btn btn-outline-warning">Edit</button></span></td>
+						</tr>
+					</tbody>
+				</table>
+				<div ng-show="ctrl.myEditplayer">
+				<form>
+					<fieldset>
+						<legend>edit Player</legend>
+<!-- 						<div class="form-group"> -->
+<!-- 							<input type="text" readonly="" class="form-control" -->
+<!-- 								ng-model="ctrl.editedPlayer.id" placeholder="Id" value="0"> -->
+<!-- 						</div> -->
+						<div class="form-group">
+							<input type="text" class="form-control"
+								ng-model="ctrl.editedPlayer.name" placeholder="Name">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" id="Level"
+								ng-model="ctrl.editedPlayer.level" placeholder="Level">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" id="Experience"
+								ng-model="ctrl.editedPlayer.experience" placeholder="Experience">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" id="Health"
+								ng-model="ctrl.editedPlayer.health" placeholder="Health">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" id="Agility"
+								ng-model="ctrl.editedPlayer.agility" placeholder="Agility">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" id="Armor"
+								ng-model="ctrl.editedPlayer.armor" placeholder="Armor">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" id="Damage"
+								ng-model="ctrl.editedPlayer.damage" placeholder="Damage">
+						</div>
+
+						<button type="submit" class="btn btn-warning"
+							ng-click="ctrl.editPlayer()">Edit</button>
+						<button type="submit" class="btn btn-danger"
+							ng-click="ctrl.myEditplayer=false">Cancel</button>
+					</fieldset>
+				</form>
+				</div>
+			</div>
+
+
+			<!--  Battle Section -->
+			<div class="wrapper" ng-show="ctrl.myBattle">
+				<h2 class="text-center">Battle!!!</h2>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Level</th>
+							<th>Experience</th>
+							<th>Health</th>
+							<th>Agility</th>
+							<th>Armor</th>
+							<th>Damage</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="c in ctrl.characters">
+							<td><span ng-bind="c.name"></span></td>
+							<td><span ng-bind="c.level"></span></td>
+							<td><span ng-bind="c.experience"></span></td>
+							<td><span ng-bind="c.health"></span></td>
+							<td><span ng-bind="c.agility"></span></td>
+							<td><span ng-bind="c.armor"></span></td>
+							<td><span ng-bind="c.damage"></span></td>
+							<td><span><button ng-click="ctrl.battle(c.id)"
+										class="btn btn-warning">Battle</button></span></td>
+
+						</tr>
+					</tbody>
+				</table>
+				<div>
+					<h2>Winner:</h2>
+					<p ng-bind="ctrl.displayWinner.name"></p>
+				</div>
+
+
+			</div>
+
+
+			<!--  Show Section -->
+			<div class="wrapper" ng-show="ctrl.myMonster">
+				<h2 class="text-center">Monster!!!</h2>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+
+							<th>Name</th>
+							<th>Level</th>
+							<th>Experience</th>
+							<th>Health</th>
+							<th>Agility</th>
+							<th>Armor</th>
+							<th>Damage</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="c in ctrl.characters">
+
+							<td><span ng-bind="c.name"></span></td>
+							<td><span ng-bind="c.level"></span></td>
+							<td><span ng-bind="c.experience"></span></td>
+							<td><span ng-bind="c.health"></span></td>
+							<td><span ng-bind="c.agility"></span></td>
+							<td><span ng-bind="c.armor"></span></td>
+							<td><span ng-bind="c.damage"></span></td>
+							<td><span><button ng-click="ctrl.deleteMonster(c.id)"
+										class="btn btn-danger">Delete</button></span></td>
+							
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+
+			<!--  Create Section -->
+			<div class="container" ng-show="ctrl.myCreate">
+				
+				<form method="post">
+					<fieldset>
+						<h2 class="text-center">Create Monster</h2>
+						<div class="form-group">
+							<input type="text" class="form-control"
+								ng-model="ctrl.monster.name" placeholder="Name">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" id="Level"
+								ng-model="ctrl.monster.level" placeholder="Level">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" id="Experience"
+								ng-model="ctrl.monster.experience" placeholder="Experience">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" id="Health"
+								ng-model="ctrl.monster.health" placeholder="Health">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" id="Agility"
+								ng-model="ctrl.monster.agility" placeholder="Agility">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" id="Armor"
+								ng-model="ctrl.monster.armor" placeholder="Armor">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" id="Damage"
+								ng-model="ctrl.monster.damage" placeholder="Damage">
+						</div>
+
+						<button type="submit" class="btn btn-primary"
+							ng-click="ctrl.createMonster()">Create</button>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
